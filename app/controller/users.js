@@ -17,6 +17,9 @@ class UsersCtl {
       name: {type: 'string', required: true},
       password: {type: 'string', required: true}
     })
+    const {name} = ctx.request.body
+    const repeatUser = User.findOne({name})
+    if (repeatUser) { ctx.throw(409, '用户已被占用') }
     const user = await User(ctx.request.body).save()
     ctx.body = user
   }
@@ -25,9 +28,6 @@ class UsersCtl {
       name: {type: 'string', required: false},
       password: {type: 'string', required: false}
     })
-    const {name} = ctx.request.body
-    const repeatUser = User.findOne({name})
-    if (repeatUser) { ctx.throw(409, '用户已被占用') }
     const user = await User.findByIdAndUpdate(ctx.params.id, ctx.request.body)
     if (!user) {ctx.throw(404, '用户不存在')}
     ctx.body = user
