@@ -1,23 +1,9 @@
-const jsonwebtoken = require('jsonwebtoken')
 const KoaRouter = require('koa-router')
 const jwt = require('koa-jwt')
 
 const router = new KoaRouter({prefix: '/users'})
 const {find, findById, create, update, del, login, checkOwer} = require('../controller/users')
 const secret = require('../config').secret
-
-// const auth = async (ctx,next) => {
-//   try {
-//     const {authorization=''} = ctx.request.header
-//     const token = authorization.replace('Bearer ', '')
-//     console.log('token',token)
-//     const user = jsonwebtoken.verify(token, scret)
-//     ctx.state.user = user
-//   } catch (error) {
-//     ctx.throw(401, error.message)
-//   }
-//   await next()
-// }
 
 const auth = jwt({secret})
 
