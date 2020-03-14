@@ -8,7 +8,12 @@ const UserSchema = new Schema({
   },
   password:{
     type: 'string',
-    required: true
+    required: true,
+    select: false
+  },
+  __v: {
+    type: 'number',
+    select: false
   }
 })
 
