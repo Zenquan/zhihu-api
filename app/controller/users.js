@@ -44,7 +44,7 @@ class UsersCtl {
       password: {type: 'string', required: true}
     })
     const user = User.findOne(ctx.request.body)
-    if(user) {ctx.throw(401, '用户名或者密码不正确')}
+    if(!user) {ctx.throw(401, '用户名或者密码不正确')}
     const {_id, name} = user
     const token = jsonwebtoken.sign({_id, name}, scret, {expiresIn: '1d'})
     ctx.body = token
