@@ -66,6 +66,32 @@ class UsersCtl {
     }
     await next()
   }
+  async follow (ctx) {
+    const me = await User.findById(ctx.state.user._id).select('+following');
+    if (!me.following.map(id => id.toString()).includes(ctx.params.id)) {
+      me.following.push(ctx.params.id);
+      me.save();
+    }
+    ctx.status = 204;
+  }
+  async unfollow (ctx) {
+    let user = await User.findById(ctx.state.user._id).select('+following')
+    let index = user.following.map(id=>id.toString()).indexOf(ctx.params.id)
+    if(index > -1) {
+      user.following.splice(index)
+      user.save()
+    }
+    ctx.status = 204
+  }
+  async listenFollowing (ctx) {
+    let user = await User.findById(ctx.params.id).select('+following').populate('following')
+    if (!user) {ctx.throw(404)}
+    ctx.body = user.following
+  }
+  async listenFollower(ctx) {
+    const users = await User.find({following: ctx.params.id})
+    ctx.body = users
+  }
 }
 
 module.exports = new UsersCtl()
