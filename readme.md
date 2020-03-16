@@ -323,7 +323,7 @@ upload (ctx) {
 
 ```js
 const UserSchema = new Schema({
-  ...
+  ...,
   avatar_url: {type: String},
   gender: {type: String, enum: ['male', 'female'], default: 'male'},
   headline: {type: String},
@@ -406,3 +406,88 @@ async findById(ctx) {
  
 
 2.更新或者删除用户的信息，是需要鉴权的过程的。
+
+## 使用koa+mongodb构建的仿知乎接口(三)
+
+好了，今天要实现的需求是什么呢？
+
+需求:
+
+### 关注和取消关注
+
+1. 继续增加UserSchema中的字段
+```js
+const UserSchema = new Schema({
+  ...,
+  following: {
+    type: [{type: Schema.Types.ObjectId, ref: 'User'}],
+    select: false
+  }
+})
+```
+2. 编写转发的路由
+
+```js
+// 关注谁
+router.put('/follow/:id', auth, follow)
+// 取消关注谁
+router.delete('/unfollow/:id', auth, unfollow)
+```
+
+3. 使用数据模型编写控制器逻辑
+
+```js
+async follow (ctx) {
+  const me = await User.findById(ctx.state.user._id).select('+following');
+  if (!me.following.map(id => id.toString()).includes(ctx.params.id)) {
+    me.following.push(ctx.params.id);
+    me.save();
+  }
+  ctx.status = 204;
+}
+async unfollow (ctx) {
+  let user = await User.findById(ctx.state.user._id).select('+following')
+  let index = user.following.map(id=>id.toString()).indexOf(ctx.params.id)
+  if(index > -1) {
+    user.following.splice(index)
+    user.save()
+  }
+  ctx.status = 204
+}
+```
+
+4. 使用Postman测试
+
+### 获取粉丝列表和正在关注列表
+
+1. 编写转发的路由
+```js
+// 谁的粉丝
+router.get('/:id/listenFollower', listenFollower)
+// 谁关注了什么人
+router.get('/:id/listenFollowing', listenFollowing)
+```
+
+2. 使用数据模型编写控制器逻辑
+
+```js
+async listenFollowing (ctx) {
+  let user = await User.findById(ctx.params.id).select('+following').populate('following')
+  if (!user) {ctx.throw(404)}
+  ctx.body = user.following
+}
+async listenFollower(ctx) {
+  const users = await User.find({following: ctx.params.id})
+  ctx.body = users
+}
+```
+
+3. 使用Postman测试
+
+![](https://user-gold-cdn.xitu.io/2020/3/16/170e3c3cb941e4dd?w=1117&h=580&f=png&s=18418)
+
+![](https://user-gold-cdn.xitu.io/2020/3/16/170e3c400ffead09?w=1211&h=592&f=png&s=19968)
+
+总结：
+
+1.用户关注和取消关注，是需要鉴权的过程的。
