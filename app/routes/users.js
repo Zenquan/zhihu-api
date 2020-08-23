@@ -4,7 +4,8 @@ const jwt = require('koa-jwt')
 const router = new KoaRouter({prefix: '/users'})
 const {
   find, findById, create, update, del, login, checkOwer,
-  checkUserExit, follow, unfollow, listenFollower, listenFollowing
+  checkUserExit, follow, unfollow, listenFollower, listenFollowing,
+  currentUser
 } = require('../controller/users')
 const secret = require('../config').secret
 
@@ -30,5 +31,8 @@ router.delete('/unfollow/:id', auth, checkUserExit, unfollow)
 router.get('/:id/listenFollower', listenFollower)
 // 谁关注了什么人
 router.get('/:id/listenFollowing', listenFollowing)
+
+// admin
+router.get('/api/currentUser', currentUser)
 
 module.exports = router

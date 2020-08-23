@@ -1,6 +1,7 @@
 const jsonwebtoken = require('jsonwebtoken')
 const User = require('../models/users')
 const secret = require('../config').secret
+const currentUser = require('../models/mock/user')
 
 class UsersCtl {
   async find(ctx) {
@@ -96,6 +97,9 @@ class UsersCtl {
   async listenFollower(ctx) {
     const users = await User.find({following: ctx.params.id})
     ctx.body = users
+  }
+  async currentUser (ctx) {
+    ctx.body = currentUser
   }
 }
 

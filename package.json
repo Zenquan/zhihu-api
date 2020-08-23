@@ -5,12 +5,15 @@
   "main": "app/index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production nodemon app",
-    "dev": "nodemon app"
+    "dev": "nodemon app",
+    "server": "pm2 start app",
+    "update": "node ./update/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
@@ -19,10 +22,11 @@
     "koa-parameter": "^3.0.1",
     "koa-router": "^8.0.8",
     "koa-static": "^5.0.0",
-    "mongoose": "^5.9.4"
+    "mongoose": "^5.9.4",
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.4"
   }
 }

@@ -8,8 +8,10 @@ class HomeCtl {
   upload (ctx) {
     const file = ctx.request.files.file
     const basename = path.basename(file.path)
+    console.log('basename>>>', basename);
+    const url = `${ctx.origin}/uploads/${basename}`
     ctx.body = {
-      url: `${ctx.origin}/uploads/${basename}`
+      url
     }
   }
 }
