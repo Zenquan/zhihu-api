@@ -11,7 +11,6 @@ const app = new Koa()
 const routing = require('./routes/index')
 const {connectionStr, staticPath} = require('./config')
 
-console.log('staticPath>>>', staticPath);
 // 连接数据库
 mongoose.connect(connectionStr, {
   useNewUrlParser: true,
@@ -31,12 +30,12 @@ app.use(error({
 app.use(KoaBody({
   multipart: true,
   formidable: {
-    uploadDir: path.join(__dirname, `../../../../Workspace`),
+    uploadDir: path.join(__dirname, staticPath),
     keepExtensions: true
   }
 }))
 app.use(KoaStatic(
-  path.join(__dirname, `../../../../Workspace`)
+  path.join(__dirname, staticPath)
 ))
 app.use(parameter(app))
 app.use(cors());
