@@ -41,7 +41,7 @@ app.use(parameter(app))
 app.use(cors());
 routing(app)
 
-const port = 3000 || process.env.port
+const port = 5000 || process.env.port
 app.listen(port, () => {
   console.log(`App is listen on ${port}`)
 })

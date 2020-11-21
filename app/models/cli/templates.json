@@ -1,0 +1,10 @@
+{
+	"zen-tools": {
+		"owner": "Zenquan/zen-tools",
+		"branch": "master"
+	},
+	"zen-wheets-ts-template": {
+		"owner": "Zenquan/zen-wheets-ts-template",
+		"branch": "master"
+	}
+}
