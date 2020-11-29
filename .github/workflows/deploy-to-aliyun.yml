@@ -23,8 +23,8 @@ jobs:
       - name: Deploy
         uses: easingthemes/ssh-deploy@v2.0.7
         env:
-          echo "${{secrets.DEPLOY_KEY}}" > deploy_key
-          echo "${{secrets.REMOTE_HOST}}" > remote_host
+          echo "${{secrets.DEPLOY_KEY}}"
+          echo "${{secrets.REMOTE_HOST}}"
           SSH_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN }}
           ARGS: "-avz --delete"
           SOURCE: ""
