@@ -29,10 +29,3 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: "root"
           TARGET: "root/workspace/zhihu"
-            # npm install
-      - name: npm install and start
-        run: |
-          npm install
-          npm run start
-        env:
-          CI: true
