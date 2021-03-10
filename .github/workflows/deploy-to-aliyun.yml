@@ -3,7 +3,7 @@ name: deploy to aliyun
 on:
   push:
     branches:
-      - ali-ecs  # 只在ali-ecs上push触发部署
+      - dev  # 只在ali-ecs上push触发部署
     paths-ignore:   # 下列文件的变更不触发部署，可以自行添加
       - README.md
       - LICENSE

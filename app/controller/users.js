@@ -2,7 +2,7 @@ const jsonwebtoken = require('jsonwebtoken')
 const User = require('../models/users')
 const secret = require('../config').secret
 const currentUser = require('../models/mock/user')
-
+const {resultData} = require('../utils/index')
 class UsersCtl {
   async find(ctx) {
     ctx.body = await User.find()
@@ -24,7 +24,7 @@ class UsersCtl {
     const repeatUser = await User.findOne({name})
     if (repeatUser) { ctx.throw(409, '用户已被占用') }
     const user = await User(ctx.request.body).save()
-    ctx.body = user
+    ctx.body = resultData(ctx.status, user);
   }
   async update(ctx) {
     ctx.verifyParams({
@@ -54,11 +54,15 @@ class UsersCtl {
       password: {type: 'string', required: true}
     })
     const user = await User.findOne(ctx.request.body)
-    if(!user) {ctx.throw(401, '用户名或者密码不正确')}
-    const {_id, name} = user
-    const token = await jsonwebtoken.sign({_id, name}, secret, {expiresIn: '1d'})
-    ctx.body = {
-      token
+    if(!user) {
+      ctx.throw(401, '用户名或者密码不正确')
+    } else {
+      const {_id, name} = user
+      const token = await jsonwebtoken.sign({_id, name}, secret, {expiresIn: '1d'})
+      ctx.status = 200
+      ctx.body = resultData(ctx.status, {
+        token
+      }, '登录成功')
     }
   }
   async checkOwer(ctx, next) {
